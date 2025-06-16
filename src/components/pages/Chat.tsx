@@ -1,40 +1,40 @@
-import React, { useState } from 'react';
-import { Send, Search, MoreHorizontal } from 'lucide-react';
+import { useState } from "react";
+import { Send, Search, MoreHorizontal } from "lucide-react";
 
 const Chat = () => {
-  const [selectedClient, setSelectedClient] = useState('acme-corp');
-  const [message, setMessage] = useState('');
+  const [selectedClient, setSelectedClient] = useState("acme-corp");
+  const [message, setMessage] = useState("");
 
   const clients = [
     {
-      id: 'acme-corp',
-      name: 'Acme Corp',
-      lastMessage: 'Thanks for the update on the project.',
-      timestamp: '2 hours ago',
+      id: "acme-corp",
+      name: "Acme Corp",
+      lastMessage: "Thanks for the update on the project.",
+      timestamp: "2 hours ago",
       unread: 2,
       online: true,
     },
     {
-      id: 'tech-startup',
-      name: 'Tech Startup',
-      lastMessage: 'When can we schedule the next meeting?',
-      timestamp: '1 day ago',
+      id: "tech-startup",
+      name: "Tech Startup",
+      lastMessage: "When can we schedule the next meeting?",
+      timestamp: "1 day ago",
       unread: 0,
       online: false,
     },
     {
-      id: 'global-industries',
-      name: 'Global Industries',
-      lastMessage: 'The deliverables look great!',
-      timestamp: '2 days ago',
+      id: "global-industries",
+      name: "Global Industries",
+      lastMessage: "The deliverables look great!",
+      timestamp: "2 days ago",
       unread: 1,
       online: true,
     },
     {
-      id: 'retail-plus',
-      name: 'Retail Plus',
-      lastMessage: 'Can you send the latest mockups?',
-      timestamp: '3 days ago',
+      id: "retail-plus",
+      name: "Retail Plus",
+      lastMessage: "Can you send the latest mockups?",
+      timestamp: "3 days ago",
       unread: 0,
       online: false,
     },
@@ -43,42 +43,48 @@ const Chat = () => {
   const messages = [
     {
       id: 1,
-      sender: 'client',
-      content: 'Hi Alex, I wanted to check on the progress of our website redesign project.',
-      timestamp: '10:30 AM',
+      sender: "client",
+      content:
+        "Hi Alex, I wanted to check on the progress of our website redesign project.",
+      timestamp: "10:30 AM",
     },
     {
       id: 2,
-      sender: 'me',
-      content: 'Hello! The project is going well. We\'ve completed the initial design phase and are now working on the development.',
-      timestamp: '10:32 AM',
+      sender: "me",
+      content:
+        "Hello! The project is going well. We've completed the initial design phase and are now working on the development.",
+      timestamp: "10:32 AM",
     },
     {
       id: 3,
-      sender: 'client',
-      content: 'That\'s great to hear! When do you expect to have a working prototype ready?',
-      timestamp: '10:35 AM',
+      sender: "client",
+      content:
+        "That's great to hear! When do you expect to have a working prototype ready?",
+      timestamp: "10:35 AM",
     },
     {
       id: 4,
-      sender: 'me',
-      content: 'We should have a working prototype ready by next Friday. I\'ll send you the link once it\'s deployed.',
-      timestamp: '10:37 AM',
+      sender: "me",
+      content:
+        "We should have a working prototype ready by next Friday. I'll send you the link once it's deployed.",
+      timestamp: "10:37 AM",
     },
     {
       id: 5,
-      sender: 'client',
-      content: 'Perfect! Thanks for the update.',
-      timestamp: '10:40 AM',
+      sender: "client",
+      content: "Perfect! Thanks for the update.",
+      timestamp: "10:40 AM",
     },
   ];
 
-  const selectedClientData = clients.find(client => client.id === selectedClient);
+  const selectedClientData = clients.find(
+    (client) => client.id === selectedClient
+  );
 
   const handleSendMessage = () => {
     if (message.trim()) {
-      console.log('Sending message:', message);
-      setMessage('');
+      console.log("Sending message:", message);
+      setMessage("");
     }
   };
 
@@ -97,14 +103,16 @@ const Chat = () => {
             />
           </div>
         </div>
-        
+
         <div className="flex-1 overflow-y-auto">
           {clients.map((client) => (
             <div
               key={client.id}
               onClick={() => setSelectedClient(client.id)}
               className={`p-4 cursor-pointer hover:bg-gray-50 border-b border-gray-100 ${
-                selectedClient === client.id ? 'bg-blue-50 border-r-2 border-r-blue-500' : ''
+                selectedClient === client.id
+                  ? "bg-blue-50 border-r-2 border-r-blue-500"
+                  : ""
               }`}
             >
               <div className="flex items-center justify-between mb-2">
@@ -112,7 +120,10 @@ const Chat = () => {
                   <div className="relative">
                     <div className="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center">
                       <span className="text-sm font-medium text-gray-700">
-                        {client.name.split(' ').map(n => n[0]).join('')}
+                        {client.name
+                          .split(" ")
+                          .map((n) => n[0])
+                          .join("")}
                       </span>
                     </div>
                     {client.online && (
@@ -120,7 +131,9 @@ const Chat = () => {
                     )}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <h3 className="text-sm font-medium text-gray-900 truncate">{client.name}</h3>
+                    <h3 className="text-sm font-medium text-gray-900 truncate">
+                      {client.name}
+                    </h3>
                     <p className="text-xs text-gray-500">{client.timestamp}</p>
                   </div>
                 </div>
@@ -130,7 +143,9 @@ const Chat = () => {
                   </span>
                 )}
               </div>
-              <p className="text-sm text-gray-600 truncate">{client.lastMessage}</p>
+              <p className="text-sm text-gray-600 truncate">
+                {client.lastMessage}
+              </p>
             </div>
           ))}
         </div>
@@ -144,13 +159,18 @@ const Chat = () => {
             <div className="flex items-center space-x-3">
               <div className="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center">
                 <span className="text-sm font-medium text-gray-700">
-                  {selectedClientData?.name.split(' ').map(n => n[0]).join('')}
+                  {selectedClientData?.name
+                    .split(" ")
+                    .map((n) => n[0])
+                    .join("")}
                 </span>
               </div>
               <div>
-                <h2 className="text-lg font-semibold text-gray-900">{selectedClientData?.name}</h2>
+                <h2 className="text-lg font-semibold text-gray-900">
+                  {selectedClientData?.name}
+                </h2>
                 <p className="text-sm text-gray-500">
-                  {selectedClientData?.online ? 'Online' : 'Offline'}
+                  {selectedClientData?.online ? "Online" : "Offline"}
                 </p>
               </div>
             </div>
@@ -165,19 +185,21 @@ const Chat = () => {
           {messages.map((msg) => (
             <div
               key={msg.id}
-              className={`flex ${msg.sender === 'me' ? 'justify-end' : 'justify-start'}`}
+              className={`flex ${
+                msg.sender === "me" ? "justify-end" : "justify-start"
+              }`}
             >
               <div
                 className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${
-                  msg.sender === 'me'
-                    ? 'bg-blue-500 text-white'
-                    : 'bg-gray-100 text-gray-900'
+                  msg.sender === "me"
+                    ? "bg-blue-500 text-white"
+                    : "bg-gray-100 text-gray-900"
                 }`}
               >
                 <p className="text-sm">{msg.content}</p>
                 <p
                   className={`text-xs mt-1 ${
-                    msg.sender === 'me' ? 'text-blue-100' : 'text-gray-500'
+                    msg.sender === "me" ? "text-blue-100" : "text-gray-500"
                   }`}
                 >
                   {msg.timestamp}
@@ -196,7 +218,7 @@ const Chat = () => {
               onChange={(e) => setMessage(e.target.value)}
               placeholder="Type your message..."
               className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+              onKeyPress={(e) => e.key === "Enter" && handleSendMessage()}
             />
             <button
               onClick={handleSendMessage}
