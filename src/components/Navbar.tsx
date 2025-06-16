@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { User, Settings, LogOut, ChevronDown } from 'lucide-react';
+import React, { useState } from "react";
+import { User, Settings, LogOut, ChevronDown } from "lucide-react";
 
 interface NavbarProps {
   onSignOut: () => void;
@@ -17,7 +17,7 @@ const Navbar: React.FC<NavbarProps> = ({ onSignOut }) => {
           </div>
           <h1 className="text-xl font-semibold text-gray-900">Client Portal</h1>
         </div>
-        
+
         <div className="relative">
           <button
             onClick={() => setDropdownOpen(!dropdownOpen)}
@@ -26,10 +26,12 @@ const Navbar: React.FC<NavbarProps> = ({ onSignOut }) => {
             <div className="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center">
               <User className="w-4 h-4 text-gray-600" />
             </div>
-            <span className="text-sm font-medium text-gray-700">Alex Johnson</span>
+            <span className="text-sm font-medium text-gray-700">
+              Alex Johnson
+            </span>
             <ChevronDown className="w-4 h-4 text-gray-500" />
           </button>
-          
+
           {dropdownOpen && (
             <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-50">
               <button
