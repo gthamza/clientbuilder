@@ -4,6 +4,7 @@ import { Send, Search, MoreHorizontal } from "lucide-react";
 const Chat = () => {
   const [selectedClient, setSelectedClient] = useState("acme-corp");
   const [message, setMessage] = useState("");
+  const [search, setSearch] = useState(""); // Add search state
 
   const clients = [
     {
@@ -39,6 +40,11 @@ const Chat = () => {
       online: false,
     },
   ];
+
+  // Filter clients by search input (case-insensitive)
+  const filteredClients = clients.filter((client) =>
+    client.name.toLowerCase().includes(search.toLowerCase())
+  );
 
   const messages = [
     {
@@ -99,13 +105,15 @@ const Chat = () => {
             <input
               type="text"
               placeholder="Search conversations..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
               className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             />
           </div>
         </div>
 
         <div className="flex-1 overflow-y-auto">
-          {clients.map((client) => (
+          {filteredClients.map((client) => (
             <div
               key={client.id}
               onClick={() => setSelectedClient(client.id)}
