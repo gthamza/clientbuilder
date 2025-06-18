@@ -1,12 +1,15 @@
 import React, { useState } from "react";
-import { User, Settings, LogOut, ChevronDown } from "lucide-react";
+import { Settings, LogOut, ChevronDown } from "lucide-react";
+import { UserButton, useUser, useClerk } from "@clerk/clerk-react";
 
 interface NavbarProps {
-  onSignOut: () => void;
+  onSignOut?: () => void;
 }
 
-const Navbar: React.FC<NavbarProps> = ({ onSignOut }) => {
+const Navbar: React.FC<NavbarProps> = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const { user } = useUser();
+  const { signOut } = useClerk();
 
   return (
     <nav className="bg-white shadow-sm border-b border-gray-200 px-6 py-4">
@@ -23,11 +26,11 @@ const Navbar: React.FC<NavbarProps> = ({ onSignOut }) => {
             onClick={() => setDropdownOpen(!dropdownOpen)}
             className="flex items-center space-x-2 p-2 rounded-lg hover:bg-gray-100 transition-colors"
           >
-            <div className="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center">
-              <User className="w-4 h-4 text-gray-600" />
-            </div>
+            <UserButton />
             <span className="text-sm font-medium text-gray-700">
-              Alex Johnson
+              {user?.fullName ||
+                user?.primaryEmailAddress?.emailAddress ||
+                "User"}
             </span>
             <ChevronDown className="w-4 h-4 text-gray-500" />
           </button>
@@ -37,7 +40,7 @@ const Navbar: React.FC<NavbarProps> = ({ onSignOut }) => {
               <button
                 onClick={() => {
                   setDropdownOpen(false);
-                  // This would typically navigate to settings, but we'll handle it in the parent component
+                  // Optionally navigate to settings
                 }}
                 className="flex items-center space-x-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
               >
@@ -45,9 +48,10 @@ const Navbar: React.FC<NavbarProps> = ({ onSignOut }) => {
                 <span>Settings</span>
               </button>
               <button
-                onClick={() => {
+                onClick={async () => {
                   setDropdownOpen(false);
-                  onSignOut();
+                  await signOut();
+                  window.location.replace("/"); // Ensures full reload and no back navigation
                 }}
                 className="flex items-center space-x-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
               >

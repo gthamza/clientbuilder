@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { SignedIn, SignedOut } from "@clerk/clerk-react";
 import Navbar from "./components/Navbar";
 import Sidebar from "./components/Sidebar";
 import Dashboard from "./components/pages/Dashboard";
@@ -10,32 +10,12 @@ import Chat from "./components/pages/Chat";
 import Settings from "./components/pages/Settings";
 import SignIn from "./components/auth/SignIn";
 import SignUp from "./components/auth/SignUp";
+import { useState } from "react";
 
 function App() {
   const [currentPage, setCurrentPage] = useState("dashboard");
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-  const [isAuthenticated, setIsAuthenticated] = useState(false); // Default to false
   const [authMode, setAuthMode] = useState<"signin" | "signup">("signin");
-
-  // Redirect to dashboard after login/signup
-  useEffect(() => {
-    if (isAuthenticated) {
-      setCurrentPage("dashboard");
-    }
-  }, [isAuthenticated]);
-
-  const handleSignIn = () => {
-    setIsAuthenticated(true);
-  };
-
-  const handleSignUp = () => {
-    setIsAuthenticated(true);
-  };
-
-  const handleSignOut = () => {
-    setIsAuthenticated(false);
-    setAuthMode("signin");
-  };
 
   const renderCurrentPage = () => {
     switch (currentPage) {
@@ -58,41 +38,42 @@ function App() {
     }
   };
 
-  // Show authentication screens if user is not authenticated
-  if (!isAuthenticated) {
-    return authMode === "signin" ? (
-      <SignIn
-        onSignIn={handleSignIn}
-        onSwitchToSignUp={() => setAuthMode("signup")}
-      />
-    ) : (
-      <SignUp
-        onSignUp={handleSignUp}
-        onSwitchToSignIn={() => setAuthMode("signin")}
-      />
-    );
-  }
-
-  // Show main app layout when authenticated
   return (
-    <div className="min-h-screen bg-gray-50">
-      <Navbar onSignOut={handleSignOut} />
-      <div className="flex">
-        <Sidebar
-          currentPage={currentPage}
-          setCurrentPage={setCurrentPage}
-          collapsed={sidebarCollapsed}
-          setCollapsed={setSidebarCollapsed}
-        />
-        <main
-          className={`flex-1 transition-all duration-300 ${
-            sidebarCollapsed ? "ml-16" : "ml-64"
-          }`}
-        >
-          <div className="p-6">{renderCurrentPage()}</div>
-        </main>
-      </div>
-    </div>
+    <>
+      <SignedOut>
+        {authMode === "signin" ? (
+          <SignIn
+            onSignIn={() => setAuthMode("signin")}
+            onSwitchToSignUp={() => setAuthMode("signup")}
+          />
+        ) : (
+          <SignUp
+            onSignUp={() => setAuthMode("signin")}
+            onSwitchToSignIn={() => setAuthMode("signin")}
+          />
+        )}
+      </SignedOut>
+      <SignedIn>
+        <div className="min-h-screen bg-gray-50">
+          <Navbar onSignOut={() => window.location.reload()} />
+          <div className="flex">
+            <Sidebar
+              currentPage={currentPage}
+              setCurrentPage={setCurrentPage}
+              collapsed={sidebarCollapsed}
+              setCollapsed={setSidebarCollapsed}
+            />
+            <main
+              className={`flex-1 transition-all duration-300 ${
+                sidebarCollapsed ? "ml-16" : "ml-64"
+              }`}
+            >
+              <div className="p-6">{renderCurrentPage()}</div>
+            </main>
+          </div>
+        </div>
+      </SignedIn>
+    </>
   );
 }
 
