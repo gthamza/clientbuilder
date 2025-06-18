@@ -1,3 +1,4 @@
+import { useUser } from "@clerk/clerk-react";
 import { Users, FolderOpen, Receipt, TrendingUp } from "lucide-react";
 import { useMemo } from "react";
 
@@ -187,12 +188,12 @@ const Dashboard = () => {
       type: "project",
     },
   ];
-
+  const { user } = useUser();
   return (
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold text-gray-900 mb-2">
-          Welcome back, Alex!
+          Welcome back, {user?.firstName || user?.username || "Guest"}!
         </h1>
         <p className="text-gray-600">
           Here's what's happening with your business today.

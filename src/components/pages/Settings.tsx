@@ -1,14 +1,5 @@
 import { useState } from "react";
-import {
-  User,
-  Bell,
-  Shield,
-  CreditCard,
-  Globe,
-  Moon,
-  Sun,
-  Save,
-} from "lucide-react";
+import { User, Bell, Shield, CreditCard, Globe, Save } from "lucide-react";
 
 const Settings = () => {
   const [activeTab, setActiveTab] = useState("profile");
