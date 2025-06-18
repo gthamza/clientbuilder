@@ -1,6 +1,15 @@
-import { SignedIn, SignedOut } from "@clerk/clerk-react";
+import { useEffect, useState } from "react";
+import {
+  SignedIn,
+  SignedOut,
+  SignIn,
+  SignUp,
+  useSignIn,
+} from "@clerk/clerk-react";
+
 import Navbar from "./components/Navbar";
 import Sidebar from "./components/Sidebar";
+
 import Dashboard from "./components/pages/Dashboard";
 import Projects from "./components/pages/Projects";
 import Clients from "./components/pages/Clients";
@@ -8,15 +17,31 @@ import Files from "./components/pages/Files";
 import Invoices from "./components/pages/Invoices";
 import Chat from "./components/pages/Chat";
 import Settings from "./components/pages/Settings";
-import SignIn from "./components/auth/SignIn";
-import SignUp from "./components/auth/SignUp";
-import { useState } from "react";
 
 function App() {
   const [currentPage, setCurrentPage] = useState("dashboard");
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [authMode, setAuthMode] = useState<"signin" | "signup">("signin");
+  const { handleRedirectCallback } = useSignIn();
 
+  // ✅ Handle OAuth redirect
+  useEffect(() => {
+    const completeOAuth = async () => {
+      if (window.location.search.includes("__clerk")) {
+        try {
+          const result = await handleRedirectCallback();
+          console.log("✅ OAuth complete:", result);
+          window.history.replaceState({}, document.title, "/");
+        } catch (err) {
+          console.error("❌ OAuth redirect error:", err);
+        }
+      }
+    };
+
+    completeOAuth();
+  }, [handleRedirectCallback]);
+
+  // ✅ Render current page based on sidebar state
   const renderCurrentPage = () => {
     switch (currentPage) {
       case "dashboard":
@@ -43,16 +68,23 @@ function App() {
       <SignedOut>
         {authMode === "signin" ? (
           <SignIn
-            onSignIn={() => setAuthMode("signin")}
-            onSwitchToSignUp={() => setAuthMode("signup")}
+            routing="path"
+            path="/sign-in"
+            redirectUrl="/"
+            afterSignIn={() => setAuthMode("signin")}
+            appearance={{ variables: { colorPrimary: "#3b82f6" } }}
           />
         ) : (
           <SignUp
-            onSignUp={() => setAuthMode("signin")}
-            onSwitchToSignIn={() => setAuthMode("signin")}
+            routing="path"
+            path="/sign-up"
+            redirectUrl="/"
+            afterSignUp={() => setAuthMode("signin")}
+            appearance={{ variables: { colorPrimary: "#3b82f6" } }}
           />
         )}
       </SignedOut>
+
       <SignedIn>
         <div className="min-h-screen bg-gray-50">
           <Navbar onSignOut={() => window.location.reload()} />
