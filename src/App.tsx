@@ -5,6 +5,7 @@ import {
   SignIn,
   SignUp,
   useSignIn,
+  useUser,
 } from "@clerk/clerk-react";
 
 import Navbar from "./components/Navbar";
@@ -18,11 +19,14 @@ import Invoices from "./components/pages/Invoices";
 import Chat from "./components/pages/Chat";
 import Settings from "./components/pages/Settings";
 
+import { supabase } from "./lib/supabaseClient";
+
 function App() {
   const [currentPage, setCurrentPage] = useState("dashboard");
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [authMode, setAuthMode] = useState<"signin" | "signup">("signin");
   const { handleRedirectCallback } = useSignIn();
+  const { user } = useUser();
 
   // ✅ Handle OAuth redirect
   useEffect(() => {
@@ -40,6 +44,40 @@ function App() {
 
     completeOAuth();
   }, [handleRedirectCallback]);
+
+  // ✅ Insert Clerk user into Supabase if not already exists
+  useEffect(() => {
+    const insertUserToSupabase = async () => {
+      if (!user) return;
+
+      const clerkId = user.id?.trim();
+      const name = user.firstName || "";
+      const email = user.primaryEmailAddress?.emailAddress || "";
+
+      try {
+        const { error: insertError } = await supabase.from("users").upsert(
+          [
+            {
+              clerk_id: clerkId,
+              name,
+              email,
+            },
+          ],
+          { onConflict: "clerk_id" }
+        );
+
+        if (insertError) {
+          console.error("❌ Supabase upsert error:", insertError.message);
+        } else {
+          console.log("✅ User synced to Supabase");
+        }
+      } catch (error) {
+        console.error("❌ Supabase user sync error:", error);
+      }
+    };
+
+    insertUserToSupabase();
+  }, [user]);
 
   // ✅ Render current page based on sidebar state
   const renderCurrentPage = () => {
